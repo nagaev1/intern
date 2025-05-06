@@ -27,7 +27,7 @@ class PrinterDisplay extends BaseDisplay
 {
     public int $timer = 1;
 
-    function __construct(int $timer)
+    public function __construct(int $timer)
     {
         $this->timer = $timer;
     }
@@ -43,11 +43,10 @@ class PrinterDisplay extends BaseDisplay
 
 class MonitorDisplay extends BaseDisplay
 {
-
     public TextColor $textColor;
     public BackgroundColor $backgroundColor;
 
-    function __construct(TextColor $textColor, BackgroundColor $backgroundColor)
+    public function __construct(TextColor $textColor, BackgroundColor $backgroundColor)
     {
         $this->textColor = $textColor;
         $this->backgroundColor = $backgroundColor;

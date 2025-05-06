@@ -1,6 +1,5 @@
 <?php
-
-function bubble_sort($array)
+function BubbleSOrt($array)
 {
     while ($isSorted == false) {
         $isSorted = true;
@@ -15,4 +14,4 @@ function bubble_sort($array)
 }
 
 $arr = [3, 4, 1, 5, 6, 1, 4, 1, 4, 7, 12, 5, 13, 1, 31, 'a', 'f', 'd', 'e', 'b', 'A', 'h', 'B'];
-bubble_sort($arr);
+BubbleSOrt($arr);
