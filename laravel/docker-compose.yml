@@ -49,11 +49,11 @@ services:
       - './src/public:/var/www/laravel/public'
     entrypoint: ["php", "/var/www/laravel/artisan"]
 
-  node:
-    build: 
-      context: dockerfiles
-      dockerfile: node.Dockerfile
-    ports:
-      - "3000:3000"
-    volumes:
-      - ./src:/var/www/laravel
+  # node:
+  #   build: 
+  #     context: dockerfiles
+  #     dockerfile: node.Dockerfile
+  #   ports:
+  #     - "3000:3000"
+  #   volumes:
+  #     - ./src:/var/www/laravel
