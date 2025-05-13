@@ -29,6 +29,7 @@ services:
       dockerfile: composer.Dockerfile
     volumes:
       - ./src:/var/www/laravel
+    command: install
 
   artisan:
     build: 
