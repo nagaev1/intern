@@ -9,4 +9,12 @@ class Post extends Model
 {
     use HasFactory;
     protected $fillable = ['text', 'image'];
+
+    public function hasString(string $string): bool
+    {
+        return str_contains(
+            strtolower($this->text),
+            strtolower($string)
+        );
+    }
 }

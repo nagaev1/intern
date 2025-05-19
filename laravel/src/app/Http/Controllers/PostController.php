@@ -2,31 +2,40 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
+use App\Http\Requests\StorePostRequest;
 use App\Models\Post;
+use App\Services\PostService;
+use Throwable;
 
 class PostController extends Controller
 {
+    public function __construct(private readonly PostService $postService) {}
+
+    public function index()
+    {
+        $posts = Post::all();
+        return view("home", ["posts"=> $posts]);
+    }
+
     public function create()
     {
         return view('posts.create');
     }
 
-    public function store(Request $request)
+    public function store(StorePostRequest $request)
     {
-        $request->validate([
-            'text' => 'required|string',
-            'image' => 'required|image|max:5120'
-        ]);
+        try {
+            $this->postService->store($request->text, $request->file('image'));
+        } catch (Throwable $e) {
+            report($e);
+        }
 
-        $path = $request->file('image')->store('posts', 'public');
-        // return $path;
-        
-        Post::create([
-            'text'=> $request->text,
-            'image'=> $path
-        ]);
+        return redirect()->route('home');
+    }
 
+    public function delete(Post $post)
+    {
+        $this->postService->delete($post);
         return redirect()->route('home');
     }
 }

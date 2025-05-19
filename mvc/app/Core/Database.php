@@ -17,7 +17,7 @@ class Database
         try {
             switch ($_ENV['DB_CONNECTION']) {
                 case "sqlite":
-                    self::$connection = new PDO("sqlite:{$_SERVER['DOCUMENT_ROOT']}\db.sqlite");
+                    self::$connection = new PDO("sqlite:{$_SERVER['DOCUMENT_ROOT']}/db.sqlite");
                     break;
             }
         } catch (Exception $e) {
