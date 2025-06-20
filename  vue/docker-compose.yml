@@ -1,0 +1,17 @@
+version: "3.8"
+
+services:
+  app:
+    build:
+      dockerfile: Dockerfile
+    volumes:
+      - ./src:/var/www/laravel
+    ports:
+      - "8000:8000"
+      - "5173:5173"
+    command:
+      - composer
+      - run
+      - dev
+
+
