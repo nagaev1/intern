@@ -5,6 +5,9 @@ WORKDIR /var/www/laravel
 # Install PHP extensions
 RUN docker-php-ext-install pdo_mysql mysqli  
 
+# Copy the Laravel application code
+COPY src/ .
+
 # Install composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
@@ -12,27 +15,18 @@ COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 COPY src/composer.json src/composer.lock ./
 
 # Install composer dependencies
-RUN composer install --no-ansi --no-dev --no-interaction --no-scripts --optimize-autoloader --no-suggest
-
+RUN composer update
+RUN composer install --optimize-autoloader --no-suggest
+RUN composer dump-autoload
 # Install Node.js and npm
 RUN apk add --no-cache nodejs npm
+COPY src/package.json src/package-lock.json ./
 
-# Copy the Laravel application code
-COPY src/ .
+RUN npm install
 
 # Generate application key (optional, but recommended)
 RUN php artisan key:generate
 
-# Set proper file permissions
-RUN chown -R www-data:www-data storage bootstrap/cache
+RUN php artisan migrate
 
-# Expose port 9000 (FPM) and 8000 (Vite, if used)
-EXPOSE 9000 8000
-
-# Copy an entrypoint script (if needed, see below)
-COPY docker/entrypoint.sh /docker-entrypoint.sh
-RUN chmod +x /docker-entrypoint.sh
-
-# Command to start the application using php artisan serve.
-CMD ["/docker-entrypoint.sh"]
  

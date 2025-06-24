@@ -1,7 +1,7 @@
 version: "3.8"
 
 services:
-  app:
+  laravel:
     build:
       dockerfile: Dockerfile
     volumes:
@@ -12,6 +12,12 @@ services:
     command:
       - composer
       - run
-      - dev
-
+      - dev 
+      
+  mysql:
+    image: mysql:8.0
+    ports:
+      - "3316:3306"
+    env_file:
+      - env/mysql.env
 
