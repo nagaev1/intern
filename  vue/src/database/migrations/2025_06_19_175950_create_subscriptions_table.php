@@ -14,8 +14,8 @@ return new class extends Migration
         Schema::create('subscriptions', function (Blueprint $table) {
             $table->id();
             $table->timestamps();
-            $table->bigInteger('subscriber_id')->index();
-            $table->bigInteger('user_id')->index();
+            $table->unsignedBigInteger('subscriber_id')->index();
+            $table->unsignedBigInteger('user_id')->index();
             $table->foreign('subscriber_id')->references('id')->on('users')->onDelete('cascade');
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
         });
