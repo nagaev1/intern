@@ -24,9 +24,4 @@ COPY src/package.json src/package-lock.json ./
 
 RUN npm install
 
-# Generate application key (optional, but recommended)
-RUN php artisan key:generate
-
-RUN php artisan migrate
-
  
