@@ -61,4 +61,14 @@ class PostController extends Controller
             ]);
         }
     }
+
+    public function postsUser(Request $request, User $user)
+    {
+        $posts = $this->postService->userPostsList($user->id);
+        if ($request->user()) {
+            $posts = $this->postService->addSubscriptionStatus($posts, $request->user());
+        }
+        return Inertia::render('Posts', compact('posts'));
+    }
+
 }

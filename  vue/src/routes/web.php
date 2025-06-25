@@ -11,6 +11,7 @@ Route::get('/', function () {
 })->name('home');
 
 Route::get('/posts', [PostController::class, 'index'])->name('posts');
+Route::get('/posts/{user:name}', [PostController::class, 'postsUser'])->name('posts.user');
 
 Route::get('/dashboard', function () {
     return Inertia::render('Dashboard');

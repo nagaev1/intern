@@ -42,4 +42,10 @@ class PostService
         $posts = Post::whereIn('user_id', $usersId)->with('user.subscribers')->get();
         return $posts;
     }
+
+    public function userPostsList(int $userId)
+    {
+        $posts = Post::where('user_id', $userId)->with('user.subscribers')->get();
+        return $posts;
+    }
 }

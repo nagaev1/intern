@@ -56,7 +56,9 @@ const subscribe = async (e, userId) => {
         <section class="container mx-auto space-y-9">
             <div class=" space-y-4 max-w-lg mx-auto bg-white rounded-lg p-4 shadow-lg" v-for="(post, i) in props.posts">
                 <div class="">
-                    {{ post.user.name }}
+                    <Link :href="route('posts.user', post.user.name)" class="hover:underline">
+                        {{ post.user.name }}
+                    </Link>
                 </div>
                 <p>
                     {{ post.text }}
