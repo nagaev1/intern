@@ -4,8 +4,6 @@ services:
   laravel:
     build:
       dockerfile: Dockerfile
-    volumes:
-      - ./server:/var/www/server
     ports:
       - "8000:8000"
     command:

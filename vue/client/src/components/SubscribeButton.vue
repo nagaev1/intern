@@ -1,5 +1,6 @@
 <script setup>
 import { ref, inject, watch, watchEffect } from 'vue'
+import SecondaryButton from './SecondaryButton.vue'
 
 const postsPlugin = inject('postsPlugin')
 
@@ -30,10 +31,7 @@ const subscribe = async () => {
 </script>
 
 <template>
-  <button
-    @click="subscribe"
-    class="bg-red-400 hover:bg-red-500 px-4 py-2 rounded-xl transition-colors"
-  >
+  <SecondaryButton @click="subscribe" class="hover:bg-red-500 hover:text-white transition-colors">
     {{ isSubscribed ? 'Unsubscribe' : 'Subscribe' }}
-  </button>
+  </SecondaryButton>
 </template>

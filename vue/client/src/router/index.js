@@ -1,10 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import RegisterView from '@/views/Auth/RegisterView.vue'
 import LoginView from '@/views/Auth/LoginView.vue'
-import PostsView from '../views/Posts/PostsView.vue'
-import UserPostsView from '@/views/Posts/UserPostsView.vue'
-import FeedView from '@/views/Posts/FeedView.vue'
-import HashtagView from '@/views/Posts/HashtagView.vue'
+import PostsView from '@/views/Posts/PostsView.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -15,23 +12,23 @@ const router = createRouter({
       component: PostsView,
     },
     {
-      path: '/:userName',
-      name: 'userPosts',
-      component: UserPostsView,
-      props: true,
-    },
-    {
       path: '/feed',
       name: 'feed',
-      component: FeedView,
+      component: PostsView,
       meta: {
         auth: true,
       },
     },
     {
+      path: '/:userName',
+      name: 'userPosts',
+      component: PostsView,
+      props: true,
+    },
+    {
       path: '/hash/:hashtagName',
       name: 'hashtag',
-      component: HashtagView,
+      component: PostsView,
       props: true,
     },
     {

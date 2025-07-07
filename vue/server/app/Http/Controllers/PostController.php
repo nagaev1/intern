@@ -13,7 +13,8 @@ class PostController extends Controller
 {
     public function __construct(
         private PostService $postService
-    ) {}
+    ) {
+    }
 
     /**
      * Display a listing of the resource.
@@ -33,7 +34,7 @@ class PostController extends Controller
         $posts = $this->postService->addSubscriptionStatus($posts, auth('sanctum')->user());
         return $posts;
     }
-    
+
     /**
      * Store a newly created resource in storage.
      */
@@ -82,6 +83,12 @@ class PostController extends Controller
             $posts = $this->postService->addSubscriptionStatus($posts, auth('sanctum')->user());
         }
         return $posts;
+    }
+
+    public function subscriptionList(Request $request)
+    {
+        $subscriptions = $this->postService->subscriptionsList(auth('sanctum')->user()->id);
+        return $subscriptions;
     }
 
 }

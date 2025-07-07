@@ -6,7 +6,7 @@ export default {
       if (!token) {
         throw { message: 'Unauthenticated' }
       }
-      const res = await axios.post('http://localhost:8000/api/posts', values, {
+      const res = await axios.post('/api/posts', values, {
         headers: {
           Authorization: 'Bearer ' + token,
         },
@@ -21,7 +21,7 @@ export default {
       }
 
       const res = await axios.post(
-        `http://localhost:8000/api/user/${userId}/subscribe`,
+        `/api/user/${userId}/subscribe`,
         {},
         {
           headers: {
@@ -43,22 +43,34 @@ export default {
       return res
     }
 
-    async function getAll() {
-      return await get('http://localhost:8000/api/posts')
+    async function getSubscribtions() {
+      return await get('/api/subscriptions')
+    }
+
+    async function getAllPosts() {
+      return await get('/api/posts')
     }
 
     async function getUserPosts(userName) {
-      return await get('http://localhost:8000/api/posts/' + userName)
+      return await get('/api/posts/' + userName)
     }
 
-    async function getFeed() {
-      return await get('http://localhost:8000/api/feed')
+    async function getFeedPosts() {
+      return await get('/api/feed')
     }
 
-    async function getHashtag(hashtag) {
-      return await get('http://localhost:8000/api/posts/hash/' + hashtag)
+    async function getHashtagPosts(hashtag) {
+      return await get('/api/posts/hash/' + hashtag)
     }
 
-    app.provide('postsPlugin', { upload, getAll, getUserPosts, subscribe, getFeed, getHashtag })
+    app.provide('postsPlugin', {
+      upload,
+      getAllPosts,
+      getUserPosts,
+      subscribe,
+      getFeedPosts,
+      getHashtagPosts,
+      getSubscribtions,
+    })
   },
 }

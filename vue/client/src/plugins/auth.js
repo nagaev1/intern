@@ -2,14 +2,14 @@ import axios from 'axios'
 export default {
   install: (app, options) => {
     async function login(values) {
-      const res = await axios.post('http://localhost:8000/api/login', values)
+      const res = await axios.post('/api/login', values)
       localStorage.setItem('token', res.data.token)
       localStorage.setItem('user', JSON.stringify(res.data.user))
       return res
     }
 
     async function register(values) {
-      const res = await axios.post('http://localhost:8000/api/register', values)
+      const res = await axios.post('/api/register', values)
       console.log(res);
       localStorage.setItem('token', res.data.token)
       localStorage.setItem('user', JSON.stringify(res.data.user))

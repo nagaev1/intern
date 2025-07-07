@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Models\Hashtag;
 use App\Models\Post;
+use App\Models\Subscription;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Collection;
 
@@ -11,7 +12,7 @@ class PostService
 {
     public function list(): Collection
     {
-        $posts = Post::orderBy('created_at')->with('user.subscribers')->orderBy('created_at', 'desc')->get();
+        $posts = Post::with('user.subscribers')->orderBy('created_at', 'desc')->get();
         return $posts;
     }
 
@@ -21,16 +22,16 @@ class PostService
             'user_id' => $userId,
             'text' => $text
         ]);
-        
+
         preg_match_all("/@\w+/", $post->text, $matches);
-        foreach($matches[0] as $userNameTag) {
+        foreach ($matches[0] as $userNameTag) {
             $user = User::where('name', ltrim($userNameTag, "@"))->first();
             if ($user) {
                 $post->user_tags()->attach($user->id);
             }
         }
         preg_match_all("/#\w+/", $post->text, $matches);
-        foreach($matches[0] as $tag) {
+        foreach ($matches[0] as $tag) {
             $hashtagName = ltrim($tag, "#");
             $hashtag = Hashtag::where('name', $hashtagName)->first();
             if (!$hashtag) {
@@ -63,8 +64,8 @@ class PostService
         $usersId = $user->subscriptions()->get()->pluck('id');
         $posts = Post::whereIn('user_id', $usersId)
             ->orWhere('user_id', $user->id)
-            ->orWhereHas('user_tags', function($q) use ($user) {
-                $q->where('users.id',$user->id);
+            ->orWhereHas('user_tags', function ($q) use ($user) {
+                $q->where('users.id', $user->id);
             })
             ->with('user.subscribers')->orderBy('created_at', 'desc')->get();
         return $posts;
@@ -73,8 +74,8 @@ class PostService
     public function userPostsList(int $userId)
     {
         $posts = Post::where('user_id', $userId)
-            ->orWhereHas('user_tags', function($q) use ($userId) {
-                $q->where('users.id',$userId);
+            ->orWhereHas('user_tags', function ($q) use ($userId) {
+                $q->where('users.id', $userId);
             })
             ->with('user.subscribers')->orderBy('created_at', 'desc')->get();
         return $posts;
@@ -86,10 +87,16 @@ class PostService
         if (!$hashtag) {
             return null;
         }
-        $posts = Post::whereHas('hashtags', function($q) use ($hashtag) {
+        $posts = Post::whereHas('hashtags', function ($q) use ($hashtag) {
             $q->where('hashtags.id', $hashtag->id);
         })
             ->with('user.subscribers')->orderBy('created_at', 'desc')->get();
         return $posts;
+    }
+
+    public function subscriptionsList(int $userId)
+    {
+        $subscriptions = Subscription::where('subscriber_id', $userId)->with('user')->get();
+        return $subscriptions;
     }
 }
