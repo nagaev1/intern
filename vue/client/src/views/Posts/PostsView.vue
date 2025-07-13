@@ -23,25 +23,37 @@ const props = defineProps({
 })
 
 const updatePosts = async () => {
-  switch (route.name) {
-    case 'posts':
-      posts.value = (await postsPlugin.getAllPosts()).data
-      break
-    case 'feed':
-      posts.value = (await postsPlugin.getFeedPosts()).data
-      break
-    case 'userPosts':
-      posts.value = (await postsPlugin.getUserPosts(props.userName)).data
-      break
-    case 'hashtag':
-      posts.value = (await postsPlugin.getHashtagPosts(props.hashtagName)).data
-      break
+  try {
+    switch (route.name) {
+      case 'posts':
+        posts.value = (await postsPlugin.getAllPosts()).data
+        break
+      case 'feed':
+        posts.value = (await postsPlugin.getFeedPosts()).data
+        break
+      case 'userPosts':
+        posts.value = (await postsPlugin.getUserPosts(props.userName)).data
+        break
+      case 'hashtag':
+        posts.value = (await postsPlugin.getHashtagPosts(props.hashtagName)).data
+        break
+    }
+  } catch (err) {
+    console.error(err);
+    posts.value = []
+
   }
 }
 
 const updateSubscruptions = async () => {
-  const res = await postsPlugin.getSubscribtions()
-  subscribtions.value = res.data
+  try {
+    const res = await postsPlugin.getSubscribtions()
+    subscribtions.value = res.data
+  }
+  catch (err) {
+    console.error(err);
+    subscribtions.value = []
+  }
 }
 
 onMounted(() => {
@@ -66,7 +78,7 @@ onUpdated(() => {
 
     <PostForm @upload="updatePosts" v-if="$auth.user()" />
 
-    <div class="flex flex-col lg:flex-row-reverse items-center lg:items-start gap-8 justify-center px-4">
+    <div class="flex flex-col lg:flex-row-reverse items-center lg:items-start gap-8 justify-center px-4 my-8">
       <SubscriptionsSideBar :subscribtions v-if="subscribtions.length > 0" />
       <div class="max-w-lg w-full lg:mx-0 mx-auto">
         <!-- Posts list -->

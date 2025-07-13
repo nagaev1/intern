@@ -23,16 +23,15 @@ class PostService
             'text' => $text
         ]);
 
-        preg_match_all("/@\w+/", $post->text, $matches);
-        foreach ($matches[0] as $userNameTag) {
-            $user = User::where('name', ltrim($userNameTag, "@"))->first();
+        preg_match_all("/(@[^@]+@)|(#[^#]+#)/u", $post->text, $matches);
+        foreach ($matches[1] as $userNameTag) {
+            $user = User::where(column: 'name', operator: substr($userNameTag, offset: 1, length: -1))->first();
             if ($user) {
                 $post->user_tags()->attach($user->id);
             }
         }
-        preg_match_all("/#\w+/", $post->text, $matches);
-        foreach ($matches[0] as $tag) {
-            $hashtagName = ltrim($tag, "#");
+        foreach ($matches[2] as $tag) {
+            $hashtagName = substr($tag, 1, -1);
             $hashtag = Hashtag::where('name', $hashtagName)->first();
             if (!$hashtag) {
                 $hashtag = Hashtag::create([

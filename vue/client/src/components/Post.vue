@@ -1,10 +1,17 @@
 <script setup>
 import SubscribeButton from './SubscribeButton.vue'
+import { ref, onMounted, onUpdated, watch } from 'vue'
 
 const emit = defineEmits(['subscribed'])
-
+const textMatches = ref([])
 const { post } = defineProps({
   post: Object,
+})
+
+const regex = /(@[^@]+@)|(#[^#]+#)|([^@#]+)/g
+onMounted(() => textMatches.value = post.text.matchAll(regex))
+watch(() => post, (newPost) => {
+  textMatches.value = newPost.text.matchAll(regex)
 })
 </script>
 
@@ -19,7 +26,15 @@ const { post } = defineProps({
       </p>
     </div>
     <p>
-      {{ post.text }}
+      <template v-for="match of textMatches" is="template">
+        <template v-if="match[3]">{{ match[3] }}</template>
+        <router-link v-else class="underline text-blue-400 visited:text-blue-500" :to="{
+          name: match[1] ? 'userPosts' : 'hashtag',
+          params: { [match[1] ? 'userName' : 'hashtagName']: match[0].substring(1, match[0].length - 1) }
+        }">
+          {{ match[0].slice(0, -1) }}
+        </router-link>
+      </template>
     </p>
     <div class="text-end" v-if="$auth.user()">
       <SubscribeButton @subscribed="emit('subscribed')" :isSubscribed="post.user.is_subscribed"
