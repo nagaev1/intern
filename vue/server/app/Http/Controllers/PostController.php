@@ -21,7 +21,7 @@ class PostController extends Controller
      */
     public function index(Request $request)
     {
-        $posts = $this->postService->list();
+        $posts = $this->postService->list($request->query('page'));
         if (auth('sanctum')->user()) {
             $posts = $this->postService->addSubscriptionStatus($posts, auth('sanctum')->user());
         }
@@ -30,7 +30,7 @@ class PostController extends Controller
 
     public function feed(Request $request)
     {
-        $posts = $this->postService->feed(auth('sanctum')->user());
+        $posts = $this->postService->feed(auth('sanctum')->user(), $request->query('page'));
         $posts = $this->postService->addSubscriptionStatus($posts, auth('sanctum')->user());
         return $posts;
     }
@@ -66,7 +66,7 @@ class PostController extends Controller
 
     public function postsUser(Request $request, User $user)
     {
-        $posts = $this->postService->userPostsList($user->id);
+        $posts = $this->postService->userPostsList($user->id, $request->query('page'));
         if (auth('sanctum')->user()) {
             $posts = $this->postService->addSubscriptionStatus($posts, auth('sanctum')->user());
         }
@@ -75,7 +75,7 @@ class PostController extends Controller
 
     public function postsHashtag(Request $request, Hashtag $hashtag)
     {
-        $posts = $this->postService->hashtagPostsList($hashtag->name);
+        $posts = $this->postService->hashtagPostsList($hashtag->name, $request->query('page'));
         if (!$posts) {
             return null;
         }

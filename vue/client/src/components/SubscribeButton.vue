@@ -1,9 +1,10 @@
 <script setup>
-import { ref, inject, watch, watchEffect } from 'vue'
+import { ref, inject, watchEffect } from 'vue'
 import SecondaryButton from './SecondaryButton.vue'
+import { useStore } from 'vuex'
 
+const store = useStore()
 const postsPlugin = inject('postsPlugin')
-
 const emit = defineEmits(['subscribed'])
 
 const props = defineProps({
@@ -24,8 +25,9 @@ watchEffect(() => {
 })
 
 const subscribe = async () => {
-  postsPlugin.subscribe(props.userId)
   isSubscribed.value = !isSubscribed.value
+  await postsPlugin.subscribe(props.userId)
+  store.dispatch('UPDATE_SUBSCRIPTIONS')
   emit('subscribed')
 }
 </script>

@@ -10,9 +10,9 @@ use Illuminate\Database\Eloquent\Collection;
 
 class PostService
 {
-    public function list(): Collection
+    public function list(int|null $page = 1)
     {
-        $posts = Post::with('user.subscribers')->orderBy('created_at', 'desc')->get();
+        $posts = Post::with('user.subscribers')->orderBy('created_at', 'desc')->paginate(5, page: $page);
         return $posts;
     }
 
@@ -44,7 +44,7 @@ class PostService
 
     }
 
-    public function addSubscriptionStatus(Collection $posts, User $user)
+    public function addSubscriptionStatus($posts, User $user)
     {
         $posts->each(function (Post $post) use ($user) {
             $post->user->is_subscribed = $this->isSubscribed($user, $post->user);
@@ -58,7 +58,7 @@ class PostService
         return $target->subscribers()->where('subscriber_id', $subscriber->id)->exists();
     }
 
-    public function feed(User $user)
+    public function feed(User $user, int|null $page = 1)
     {
         $usersId = $user->subscriptions()->get()->pluck('id');
         $posts = Post::whereIn('user_id', $usersId)
@@ -66,21 +66,22 @@ class PostService
             ->orWhereHas('user_tags', function ($q) use ($user) {
                 $q->where('users.id', $user->id);
             })
-            ->with('user.subscribers')->orderBy('created_at', 'desc')->get();
+            ->with('user.subscribers')->orderBy('created_at', 'desc')->paginate(5, page: $page);
+        ;
         return $posts;
     }
 
-    public function userPostsList(int $userId)
+    public function userPostsList(int $userId, int|null $page = 1)
     {
         $posts = Post::where('user_id', $userId)
             ->orWhereHas('user_tags', function ($q) use ($userId) {
                 $q->where('users.id', $userId);
             })
-            ->with('user.subscribers')->orderBy('created_at', 'desc')->get();
+            ->with('user.subscribers')->orderBy('created_at', 'desc')->paginate(5, page: $page);
         return $posts;
     }
 
-    public function hashtagPostsList(string $hashtagName)
+    public function hashtagPostsList(string $hashtagName, int|null $page = 1)
     {
         $hashtag = Hashtag::where('name', $hashtagName)->first();
         if (!$hashtag) {
@@ -89,7 +90,7 @@ class PostService
         $posts = Post::whereHas('hashtags', function ($q) use ($hashtag) {
             $q->where('hashtags.id', $hashtag->id);
         })
-            ->with('user.subscribers')->orderBy('created_at', 'desc')->get();
+            ->with('user.subscribers')->orderBy('created_at', 'desc')->paginate(5, page: $page);
         return $posts;
     }
 

@@ -7,7 +7,7 @@ const postList = useTemplateRef('postList')
 </script>
 
 <template>
-  <PostLayout header="posts" @uploaded="() => postList.updatePosts()">
-    <PostList ref="postList" :getPosts="$postPlugin.getAllPosts" />
+  <PostLayout header="feed" @uploaded="() => postList.updatePosts()">
+    <PostList ref="postList" :getPosts="$postPlugin.getFeedPosts" />
   </PostLayout>
 </template>
