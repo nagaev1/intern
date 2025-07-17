@@ -21,7 +21,7 @@ defineExpose({ updatePosts })
 const emit = defineEmits(['subscribed'])
 </script>
 <template>
-    <section class="space-y-9" v-if="postData.data">
+    <section class="space-y-9" v-if="postData.data.length > 0">
         <Post v-for="post in postData.data" :post @subscribed="updatePosts" />
         <div class="flex justify-center gap-2 items-center">
             <router-link :to="{ name: $route.name, query: { page: 1 } }" v-if="Number($route.query.page || 1) > 2">
